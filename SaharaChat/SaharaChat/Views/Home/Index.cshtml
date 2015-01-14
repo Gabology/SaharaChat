@@ -14,35 +14,42 @@
     <script src="http://code.createjs.com/easeljs-0.8.0.min.js"></script>
 </head>
 <body onload="init()">
-
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+    <input type="text" id="cursorX" size="5"/>
+    <input type="text" id="cursorY" size="5"/>
     <script>
-        var canvas, stage;
-        var drawingCanvas;
+      
 
         function init() {
+            var stage = new createjs.Stage('myCanvas');
             canvas = document.getElementById('myCanvas');
             var circle = new createjs.Shape();
             circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
             circle.x = 100;
             circle.y = 100;
             stage.addChild(circle);
+           
+            if (Window.Event)
+            {
+                canvas.captureEvents(Event.MOUSEMOVE);
+            }
+            canvas.onmousemove = getCursorXY;
 
-            circle.addEventListener(onclick, getPosition);
-
-           stage.update();
+            canvas.click = 
+            stage.update();
         }
 
-        function getPosition(event) {
-            var x = event.x;
-            var y = event.y;
-
-            var canvas = document.getElementById('myCanvas');
-
-            x += canvas.offsetLeft;
-            y += canvas.offsetTop;
-
-            console.log(x + y);
+        function getCursorXY(e)
+        {
+            document.getElementById('cursorX').value = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
+            document.getElementById('cursorY').value = (window.Event) ? e.pageY : event.clientY + (document.documentElememt.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
         }
+
+        function circleOnClick()
+        {
+            var circle = new createjs.Shape();
+        }
+    
 
 
 
@@ -50,7 +57,7 @@
 
     </script>
 
-    <canvas id="myCanvas" width="500" height="500"></canvas>
+    
 
 </body>
 
