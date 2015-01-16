@@ -10,54 +10,101 @@
     <title>Index</title>
     <script src="~/Scripts/jquery-1.6.4.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
-    <script src="~/signalr/hubs"></script>
+    <script src="~/signalr/hubs">I</script>
     <script src="http://code.createjs.com/easeljs-0.8.0.min.js"></script>
 </head>
-<body onload="init()">
-    <canvas id="myCanvas" width="500" height="500"></canvas>
-    <input type="text" id="cursorX" size="5"/>
-    <input type="text" id="cursorY" size="5"/>
+<body">
+    <div id="stage">
+        <canvas id="myCanvas" width="500" height="500" onclick="drawIt(event)"></canvas>
+    </div>
+    <input type="text" id="cursorX" size="5" />
+    <input type="text" id="cursorY" size="5" />
     <script>
-      
 
-        function init() {
-            var stage = new createjs.Stage('myCanvas');
-            canvas = document.getElementById('myCanvas');
-            var circle = new createjs.Shape();
-            circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
-            circle.x = 100;
-            circle.y = 100;
-            stage.addChild(circle);
-           
-            if (Window.Event)
-            {
-                canvas.captureEvents(Event.MOUSEMOVE);
-            }
-            canvas.onmousemove = getCursorXY;
+        var canvas = document.getElementById('myCanvas');
+        var context = canvas.getContext('2d');
 
-            canvas.click = 
-            stage.update();
+        function createCircle(imageId) {
+            canvas.style.display = "block";
+
+            document.getElementById('stage').style.overflowY = "hidden";
+            var circle = new Image(10, 10);
+            circle.src = document.getElementById(imageId).src;
+            context.drawImage(circle, (0), (0));
         }
 
-        function getCursorXY(e)
-        {
-            document.getElementById('cursorX').value = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
-            document.getElementById('cursorY').value = (window.Event) ? e.pageY : event.clientY + (document.documentElememt.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+        function drawIt(e) {
+            var position = getMousePos(canvas, e);
+            positionX = position.x;
+            positionY = position.y;
+            context.fillStyle = "#000000";
+            context.beginPath();
+            context.arc(positionX, positionY, 20, 0, 2*Math.PI);
+            context.fill();
         }
 
-        function circleOnClick()
-        {
-            var circle = new createjs.Shape();
+        function getMousePos(canvas, evt) {
+            var rect = canvas.getBoundingClientRect();
+            return {
+                x: evt.clientX - rect.left,
+                y: evt.clientY - rect.top
+            };
         }
-    
 
+        window.drawIt = drawIt;
+
+
+        /*easelJS
+
+
+
+        //function init() {
+        //    //var stage = new createjs.Stage('myCanvas');
+        //    //canvas = document.getElementById('myCanvas');
+        //    //var circle = new createjs.Shape();
+        //    //circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50);
+        //    //circle.x = 100;
+        //    //circle.y = 100;
+        //    //stage.addChild(circle);
+
+        //    var stage = new createjs.Stage('myCanvas');
+        //    canvas = document.getElementById('myCanvas');
+
+        //    if (Window.Event) {
+        //        canvas.captureEvents(Event.MOUSEMOVE);
+        //    }
+        //    canvas.onmousemove = getCursorXY;
+
+
+        //    canvas.onclick = circleOnClick();
+
+
+        //    function getCursorXY(e) {
+        //        document.getElementById('cursorX').value = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
+        //        document.getElementById('cursorY').value = (window.Event) ? e.pageY : event.clientY + (document.documentElememt.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+        //    }
+
+        //    function circleOnClick() {
+        //        var circle = new createjs.Shape();
+        //        circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
+        //        circle.x = document.getElementById('cursorX');
+        //        circle.y = document.getElementById('cursorY');
+
+        //        stage.addChild(circle);
+        //    }
+        //    stage.update();
+
+
+        //}
+
+        */
 
 
 
 
     </script>
 
-    
+
 
 </body>
 
