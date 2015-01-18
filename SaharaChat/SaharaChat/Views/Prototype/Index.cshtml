@@ -14,8 +14,29 @@
 </head>
 <body>
     <div>
+        <p>Detta är en view</p>
     </div>
     <script>
+        // This will work as a pseudohashmap and contain all known clients and their state (X,Y coords)
+        var clients = {}
+        var local = { 'x': 0, 'y': 0 }
+        var hub = $.connection.gameHub;
+
+        document.onclick = function(subEvent) {
+            var mainEvent = subEvent ? subEvent : window.event;
+            local = { 'x': mainEvent.screenX, 'y': mainEvent.screenY };
+            $.connection.hub.start().done(function () {
+                hub.server.sendPosition(local.x, local.y);
+            });
+        }
+
+        hub.client.updatePositionOf = function(guid, x, y) {
+            if (clients.hasOwnProperty(guid))
+                delete clients[guid]
+                // TODO: Invoke a function to delete the visual object 
+
+            clients[guid] = { 'x': x, 'y': y }
+        }
     </script>
 </body>
 </html>
