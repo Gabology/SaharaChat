@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
@@ -14,17 +13,9 @@
     <script src="~/signalr/hubs"></script>
 </head>
 <body>
-    <div> 
+    <div>
     </div>
     <script>
-        $(function () {
-            // Reference the auto-generated proxy for the hub.  
-            var connection = $.connection.gameHub;
-            $.connection.hub.start().done(function() {
-                for(i = 0; i < 10; i++) {
-                    connection.server.sayHello(); }
-            });
-        }
     </script>
 </body>
 </html>
