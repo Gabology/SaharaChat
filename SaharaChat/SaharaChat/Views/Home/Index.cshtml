@@ -13,23 +13,24 @@
     <script src="~/signalr/hubs">I</script>
     <script src="http://code.createjs.com/easeljs-0.8.0.min.js"></script>
 </head>
-<body">
+<body>
     <div id="stage">
-        <canvas id="myCanvas" width="500" height="500" onclick="drawIt(event)"></canvas>
+        <canvas id="myCanvas" width="1000" height="500" onclick="drawIt(event)"></canvas>
     </div>
     <input type="text" id="cursorX" size="5" />
     <input type="text" id="cursorY" size="5" />
+
     <script>
 
         var canvas = document.getElementById('myCanvas');
-        var context = canvas.getContext('2d');
+        var context = canvas.getContext('2d'); //Allow us to draw on our canvas
 
-        function createCircle(imageId) {
+        function createCircle(circleId) {
             canvas.style.display = "block";
 
-            document.getElementById('stage').style.overflowY = "hidden";
-            var circle = new Image(10, 10);
-            circle.src = document.getElementById(imageId).src;
+            document.getElementById('stage').style.overflowY = "hidden"; //if the circle is outside the screen, clipp it
+            var circle = new Image(10, 10); //does the same as createNewElement.(img)
+            circle.src = document.getElementById(circleId).src;
             context.drawImage(circle, (0), (0));
         }
 
@@ -39,19 +40,20 @@
             positionY = position.y;
             context.fillStyle = "#000000";
             context.beginPath();
-            context.arc(positionX, positionY, 20, 0, 2*Math.PI);
+            context.arc(positionX, positionY, 20, 0, 2*Math.PI); //arc draws the circle start, center, end
             context.fill();
+            
         }
 
-        function getMousePos(canvas, evt) {
+        function getMousePos(canvas, pos) {
             var rect = canvas.getBoundingClientRect();
             return {
-                x: evt.clientX - rect.left,
-                y: evt.clientY - rect.top
+                x: pos.clientX - rect.left,
+                y: pos.clientY - rect.top
             };
         }
-
         window.drawIt = drawIt;
+        
 
 
         /*easelJS
@@ -98,9 +100,6 @@
         //}
 
         */
-
-
-
 
     </script>
 

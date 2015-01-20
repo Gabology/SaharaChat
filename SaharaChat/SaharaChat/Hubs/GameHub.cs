@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
+using System.Diagnostics;
 
 namespace SaharaChat.Hubs
 {
@@ -10,7 +11,7 @@ namespace SaharaChat.Hubs
     {
         public override System.Threading.Tasks.Task OnDisconnected(bool stopCalled)
         {
-
+            Trace.Write("Client disconnected!");
              return base.OnDisconnected(stopCalled);
         }
 
@@ -23,6 +24,11 @@ namespace SaharaChat.Hubs
         public void SendPosition(int x, int y)
         {
 
+        }
+
+        public void SayHello()
+        {
+            Trace.Write("HELLO!!!  ");
         }
     }
 }
