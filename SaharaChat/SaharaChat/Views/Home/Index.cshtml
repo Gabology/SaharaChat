@@ -23,27 +23,23 @@
     <script>
 
         var canvas = document.getElementById('myCanvas');
-        var context = canvas.getContext('2d'); //Allow us to draw on our canvas
+        var stage = new createjs.Stage("myCanvas");
+        var myCircle = new createjs.Shape();
+        myCircle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50);
+        
+        var local = { "circle":myCircle };
 
-        function createCircle(circleId) {
-            canvas.style.display = "block";
-
-            document.getElementById('stage').style.overflowY = "hidden"; //if the circle is outside the screen, clipp it
-            var circle = new Image(10, 10); //does the same as createNewElement.(img)
-            circle.src = document.getElementById(circleId).src;
-            context.drawImage(circle, (0), (0));
-        }
+        stage.addChild(local.circle);
 
         function drawIt(e) {
             var position = getMousePos(canvas, e);
-            positionX = position.x;
-            positionY = position.y;
-            context.fillStyle = "#000000";
-            context.beginPath();
-            context.arc(positionX, positionY, 20, 0, 2*Math.PI); //arc draws the circle start, center, end
-            context.fill();
-            
+            console.log(position);
+            local.circle.x = position.x;
+            local.circle.y = position.y;
+       
+            stage.update();
         }
+
 
         function getMousePos(canvas, pos) {
             var rect = canvas.getBoundingClientRect();
@@ -53,53 +49,6 @@
             };
         }
         window.drawIt = drawIt;
-        
-
-
-        /*easelJS
-
-
-
-        //function init() {
-        //    //var stage = new createjs.Stage('myCanvas');
-        //    //canvas = document.getElementById('myCanvas');
-        //    //var circle = new createjs.Shape();
-        //    //circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50);
-        //    //circle.x = 100;
-        //    //circle.y = 100;
-        //    //stage.addChild(circle);
-
-        //    var stage = new createjs.Stage('myCanvas');
-        //    canvas = document.getElementById('myCanvas');
-
-        //    if (Window.Event) {
-        //        canvas.captureEvents(Event.MOUSEMOVE);
-        //    }
-        //    canvas.onmousemove = getCursorXY;
-
-
-        //    canvas.onclick = circleOnClick();
-
-
-        //    function getCursorXY(e) {
-        //        document.getElementById('cursorX').value = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
-        //        document.getElementById('cursorY').value = (window.Event) ? e.pageY : event.clientY + (document.documentElememt.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
-        //    }
-
-        //    function circleOnClick() {
-        //        var circle = new createjs.Shape();
-        //        circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
-        //        circle.x = document.getElementById('cursorX');
-        //        circle.y = document.getElementById('cursorY');
-
-        //        stage.addChild(circle);
-        //    }
-        //    stage.update();
-
-
-        //}
-
-        */
 
     </script>
 
