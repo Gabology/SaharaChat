@@ -103,6 +103,8 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <None Include="Properties\PublishProfiles\Chatten.pubxml" />
+    <None Include="Properties\PublishProfiles\saharaChat.pubxml" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -125,7 +127,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\web.config" />
+    <Content Include="Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Prototype\Index.cshtml" />
