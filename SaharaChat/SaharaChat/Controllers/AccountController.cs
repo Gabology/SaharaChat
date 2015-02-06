@@ -25,9 +25,17 @@ namespace SaharaChat.Controllers
             }
             
             //Try to login using our given username and password
+            if (viewmodel.Username == "test" && viewmodel.Password == "123")
+            {
+                //Login success
+                return Content("Logged in!");
+            } else
+            {
+                //Failed login
+                viewmodel.ErrorMessage = "Wrong login. Try again.";
+                return View(viewmodel);
+            }
 
-
-            return View();
         }
 
 
