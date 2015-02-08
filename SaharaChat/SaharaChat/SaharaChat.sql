@@ -64,9 +64,9 @@ BEGIN
   SET @PwdWithSalt = @Salt + @AccountPwd;
 
   IF (HASHBYTES('SHA1', @PwdWithSalt) = @PwdHash)
-    RETURN 0; -- FALSE
+    RETURN 0; -- TRUE
   ELSE
-    RETURN 1; -- TRUE
+    RETURN 1; -- FALSE
 
 END;
 GO 
