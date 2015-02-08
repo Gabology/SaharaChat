@@ -1,17 +1,72 @@
 ﻿CREATE TABLE dbo.Users (
-    [Id] int NOT NULL identity(0,1) primary key,
-    [UserName] varchar(50) NOT NULL,
+	[Id] int NOT NULL identity(0,1) primary key,
+	[UserName] varchar(50) NOT NULL,
 	[Password] varbinary(255) NOT NULL,
+	[Salt] char(25) NOT NULL,
 	[SessionID] varchar(120) NULL
 );
 GO
 
--- Password hashing trigger
--- This trigger will automatically hash any password after insertion
-CREATE TRIGGER HashPw
-    ON dbo.Users
-    FOR INSERT
-    AS
-	select HASHBYTES('SHA1', Password) from inserted
+CREATE UNIQUE INDEX NDX_SecurityAccounts_AccountName 
+    ON dbo.Users (UserName) INCLUDE (Salt, Password);
+GO 
 
-insert into Users(UserName, Password) values ('test', 123)
+CREATE PROC dbo.CreateAccount
+  @NewAccountName VARCHAR(50),
+  @NewAccountPwd VARCHAR(100)
+AS
+BEGIN
+
+  SET NOCOUNT ON;
+
+  DECLARE @Salt VARCHAR(25);
+  DECLARE @PwdWithSalt VARCHAR(125);
+  
+  DECLARE @Seed int;
+  DECLARE @LCV tinyint;
+  DECLARE @CTime DATETIME;
+
+  SET @CTime = GETDATE();
+  SET @Seed = (DATEPART(hh, @Ctime) * 10000000) + (DATEPART(n, @CTime) * 100000)
+      + (DATEPART(s, @CTime) * 1000) + DATEPART(ms, @CTime);
+  SET @LCV = 1;
+  SET @Salt = CHAR(ROUND((RAND(@Seed) * 94.0) + 32, 3));
+
+  WHILE (@LCV < 25)
+  BEGIN
+    SET @Salt = @Salt + CHAR(ROUND((RAND() * 94.0) + 32, 3));
+	SET @LCV = @LCV + 1;
+  END;
+
+
+  SET @PwdWithSalt = @Salt + @NewAccountPwd;
+
+  INSERT INTO dbo.Users 
+  (UserName, Salt, Password)
+  VALUES (@NewAccountName, @Salt, HASHBYTES('SHA1', @PwdWithSalt));
+END;
+GO 
+
+CREATE PROC dbo.VerifyAccount
+  @AccountName VARCHAR(50),
+  @AccountPwd VARCHAR(100)
+AS
+BEGIN
+  SET NOCOUNT ON;
+
+  DECLARE @Salt CHAR(25);
+  DECLARE @PwdWithSalt VARCHAR(125);
+  DECLARE @PwdHash VARBINARY(20);  
+
+  SELECT @Salt = Salt, @PwdHash = Password 
+  FROM dbo.Users WHERE UserName = @AccountName;
+  
+  SET @PwdWithSalt = @Salt + @AccountPwd;
+
+  IF (HASHBYTES('SHA1', @PwdWithSalt) = @PwdHash)
+    RETURN 0; -- FALSE
+  ELSE
+    RETURN 1; -- TRUE
+
+END;
+GO 
