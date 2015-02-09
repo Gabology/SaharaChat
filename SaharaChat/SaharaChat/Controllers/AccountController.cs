@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 using System.Data;
 
 namespace SaharaChat.Controllers
-{
+{  
     public class AccountController : Controller
     {
         private bool VerifyAccount(string u, string p)
@@ -90,6 +90,7 @@ namespace SaharaChat.Controllers
         public ActionResult Logout()
         {
             Session.Abandon();  //Remove Session
+            Response.Cookies.Add(new HttpCookie("ASP.NET_SessionId", ""));  //Force a new session id onto the user
             return RedirectToAction("Index", "Home");
         }
 
