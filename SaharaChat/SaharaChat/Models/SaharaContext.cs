@@ -3,23 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Linq.Mapping;
 using System.Data.Linq;
+using System.Data.Entity.Core.Objects;
 
 namespace SaharaChat.Models
 {
     public class SaharaContext : DbContext
     {
         public DbSet<User> Users { get; set; }
-        /*
-        [Function(Name="dbo.VerifyAccount")]
-        [return: Parameter(DbType="Int")]
-        public int VerifyAccount([Parameter(Name="AccountName", DbType="VARCHAR(50)")] string AccountName, [Parameter(Name="AccountPwd", DbType="VARCHAR(100)")] string AccountPwd)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID, totalSales);
-            totalSales = ((System.Nullable<decimal>)(result.GetParameterValue(1)));
-            return ((int)(result.ReturnValue));
-        }*/
+        public ObjectContext ObjectContext { get { return (this as IObjectContextAdapter).ObjectContext ?? null; } }
+
+        public bool VerifyAccount(string userName, string password) {
+            var res = ObjectContext.ExecuteFunction<Nullable<int>>
+                ("dbo.VerifyAccount", 
+                new ObjectParameter("AccountName", userName), 
+                new ObjectParameter("AccountPwd", password))
+                .SingleOrDefault();
+
+            if(res.HasValue)
+                return (res == 1) ? true : false
+            else
+                // Not sure if we should throw an exception here, maybe we should just return false???
+                throw new Exception("Account name does not exist in db!")
+        }
     }
 
 
