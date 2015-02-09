@@ -14,7 +14,5 @@ namespace SaharaChat.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
-        public string ErrorMessage { get; set; }
     }
 } 

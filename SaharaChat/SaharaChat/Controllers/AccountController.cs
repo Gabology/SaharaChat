@@ -53,25 +53,32 @@ namespace SaharaChat.Controllers
                 return View(viewmodel);
             }
 
-            //var db = new SaharaContext();
+            //
             //var num =   db.Users
             //            .Where(u => u.UserName==viewmodel.Username && u.Password == "0x0000007B")
             //var verify = db.Database.SqlQuery<int>("dbo.VerifyAccount @AccountName, @AccountPwd", new SqlParameter("AccountName", viewmodel.Username), new SqlParameter("AccountPwd", viewmodel.Password));
             //bool verified = verify;
 
-            var result = VerifyAccount(viewmodel.Username, viewmodel.Password);
-
             //Try to login using our given username and password
-            if (viewmodel.Username == "test" && viewmodel.Password == "123")
+            if (VerifyAccount(viewmodel.Username, viewmodel.Password))
             {
                 //Login success
                 //Set cookie
-
-                return Content("Logged in!");
+                var db = new SaharaContext();
+                var user = db.Users.Where(u => u.UserName == viewmodel.Username).FirstOrDefault();
+                if (user != null)
+                {
+                    //Note: user should never be null since we have already verified it about with VerifyAccount...
+                    //FIXME: DOes Session.SessionID always exist?
+                    user.SessionID = Session.SessionID;
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Index", "Game");
             } else
             {
+
                 //Failed login
-                viewmodel.ErrorMessage = "Wrong login. Try again.";
+                ModelState.AddModelError(String.Empty, "Wrong credentials. Try again.");    //String.Empty apparently makes the error show up in ValidationSummary...
                 return View(viewmodel);
             }
 
