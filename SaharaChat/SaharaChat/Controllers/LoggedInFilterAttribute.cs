@@ -8,7 +8,7 @@ using System.Web.Routing;
 
 namespace SaharaChat.Controllers
 {
-    public class LoginFilterAttribute : ActionFilterAttribute
+    public class LoggedInFilterAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
