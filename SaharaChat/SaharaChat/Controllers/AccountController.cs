@@ -72,6 +72,10 @@ namespace SaharaChat.Controllers
                     //FIXME: DOes Session.SessionID always exist?
                     user.SessionID = Session.SessionID;
                     db.SaveChanges();
+
+                    //We need to put something in our Session, otherwise the client will not get a SessionID cookie back.
+                    //We enter our username in the session.
+                    Session["UserName"] = viewmodel.Username;
                 }
                 return RedirectToAction("Index", "Game");
             } else

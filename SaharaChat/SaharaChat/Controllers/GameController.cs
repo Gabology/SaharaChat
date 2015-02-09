@@ -11,13 +11,11 @@ namespace SaharaChat.Controllers
     public class GameController : Controller
     {
         // GET: Game
+        //User our custom action filter attribute called LoginFilter
+        [LoginFilter]   
         public ActionResult Index()
         {
-            var db = new SaharaContext();
-
-            var result = db.Users.Where(u => u.SessionID == Session.SessionID).FirstOrDefault();
-            if (result == null) return Content("Not logged in");
-
+            //Let the games begin!
 
             return View();
         }
