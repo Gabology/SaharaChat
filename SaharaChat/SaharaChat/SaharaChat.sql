@@ -1,9 +1,13 @@
-﻿CREATE TABLE dbo.Users (
+﻿DROP TABLE dbo.Users;
+
+
+CREATE TABLE dbo.Users (
 	[Id] int NOT NULL identity(0,1) primary key,
 	[UserName] varchar(50) NOT NULL,
 	[Password] varbinary(255) NOT NULL,
 	[Salt] char(25) NOT NULL,
-	[SessionID] varchar(120) NULL
+	[SessionID] varchar(120) NULL,
+	[Color] varchar(50) NOT NULL
 );
 GO
 
@@ -13,7 +17,8 @@ GO
 
 CREATE PROC dbo.CreateAccount
   @NewAccountName VARCHAR(50),
-  @NewAccountPwd VARCHAR(100)
+  @NewAccountPwd VARCHAR(100),
+  @NewAccountColor VARCHAR(50)
 AS
 BEGIN
 
@@ -42,8 +47,8 @@ BEGIN
   SET @PwdWithSalt = @Salt + @NewAccountPwd;
 
   INSERT INTO dbo.Users 
-  (UserName, Salt, Password)
-  VALUES (@NewAccountName, @Salt, HASHBYTES('SHA1', @PwdWithSalt));
+  (UserName, Salt, Password, Color)
+  VALUES (@NewAccountName, @Salt, HASHBYTES('SHA1', @PwdWithSalt), @NewAccountColor);
 END;
 GO 
 
@@ -70,3 +75,5 @@ BEGIN
 
 END;
 GO 
+
+exec dbo.CreateAccount @NewAccountName = 'test', @NewAccountPwd='123', @NewAccountColor='blue'

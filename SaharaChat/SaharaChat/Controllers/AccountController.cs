@@ -5,11 +5,37 @@ using System.Web;
 using System.Web.Mvc;
 using SaharaChat.Models;
 using System.Security.Cryptography;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace SaharaChat.Controllers
 {
     public class AccountController : Controller
     {
+        private bool VerifyAccount(string u, string p)
+        {
+            SqlConnection sqlConnection1 = new SqlConnection(@"Data Source=(localdb)\v11.0;Initial Catalog=SaharaDB");
+            SqlCommand cmd = new SqlCommand();
+            Object returnValue;
+
+            cmd.CommandText = "VerifyAccount";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = sqlConnection1;
+            cmd.Parameters.Add(new SqlParameter("AccountName", u));
+            cmd.Parameters.Add(new SqlParameter("AccountPwd", p));
+
+
+            sqlConnection1.Open();
+
+            returnValue = cmd.ExecuteScalar();
+
+            sqlConnection1.Close();
+
+
+            return (int)returnValue == 1 ? true : false;
+
+        }
+
         // GET: Account
         public ActionResult Login()
         {
@@ -27,12 +53,13 @@ namespace SaharaChat.Controllers
                 return View(viewmodel);
             }
 
-            var db = new SaharaContext();
+            //var db = new SaharaContext();
             //var num =   db.Users
             //            .Where(u => u.UserName==viewmodel.Username && u.Password == "0x0000007B")
-            var allUsers = db.Users.ToList();
+            //var verify = db.Database.SqlQuery<int>("dbo.VerifyAccount @AccountName, @AccountPwd", new SqlParameter("AccountName", viewmodel.Username), new SqlParameter("AccountPwd", viewmodel.Password));
+            //bool verified = verify;
 
-
+            var result = VerifyAccount(viewmodel.Username, viewmodel.Password);
 
             //Try to login using our given username and password
             if (viewmodel.Username == "test" && viewmodel.Password == "123")
@@ -49,6 +76,8 @@ namespace SaharaChat.Controllers
             }
 
         }
+
+
 
 
         public ActionResult Logout()
