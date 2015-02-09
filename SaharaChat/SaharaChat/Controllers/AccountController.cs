@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SaharaChat.Models;
+using System.Security.Cryptography;
 
 namespace SaharaChat.Controllers
 {
@@ -12,7 +13,9 @@ namespace SaharaChat.Controllers
         // GET: Account
         public ActionResult Login()
         {
-            return View();
+            var viewmodel = new AccountLoginViewModel();
+
+            return View(viewmodel);
         }
 
         [HttpPost]
@@ -23,11 +26,20 @@ namespace SaharaChat.Controllers
             {
                 return View(viewmodel);
             }
-            
+
+            var db = new SaharaContext();
+            //var num =   db.Users
+            //            .Where(u => u.UserName==viewmodel.Username && u.Password == "0x0000007B")
+            var allUsers = db.Users.ToList();
+
+
+
             //Try to login using our given username and password
             if (viewmodel.Username == "test" && viewmodel.Password == "123")
             {
                 //Login success
+                //Set cookie
+
                 return Content("Logged in!");
             } else
             {
