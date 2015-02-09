@@ -62,17 +62,14 @@ namespace SaharaChat.Controllers
                 //Set cookie
                 var db = new SaharaContext();
                 var user = db.Users.Where(u => u.UserName == viewmodel.Username).FirstOrDefault();
-                if (user != null)
-                {
-                    //Note: user should never be null since we have already verified it about with VerifyAccount...
-                    //FIXME: DOes Session.SessionID always exist?
-                    user.SessionID = Session.SessionID;
-                    db.SaveChanges();
 
-                    //We need to put something in our Session, otherwise the client will not get a SessionID cookie back.
-                    //We enter our username in the session.
-                    Session["UserName"] = viewmodel.Username;
-                }
+                //Session.SessionID does always seem to exist
+                user.SessionID = Session.SessionID;
+                db.SaveChanges();
+
+                //We need to put something in our Session, otherwise the client will not get a SessionID cookie back.
+                //We enter our username in the session.
+                Session["UserName"] = viewmodel.Username;
                 return RedirectToAction("Index", "Game");
             } else
             {
