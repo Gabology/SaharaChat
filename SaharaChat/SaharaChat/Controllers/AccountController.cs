@@ -24,13 +24,9 @@ namespace SaharaChat.Controllers
             cmd.Parameters.Add(new SqlParameter("AccountName", u));
             cmd.Parameters.Add(new SqlParameter("AccountPwd", p));
 
-
             sqlConnection1.Open();
-
             returnValue = cmd.ExecuteScalar();
-
             sqlConnection1.Close();
-
 
             return (int)returnValue == 1 ? true : false;
 
@@ -93,7 +89,8 @@ namespace SaharaChat.Controllers
 
         public ActionResult Logout()
         {
-            return View();
+            Session.Abandon();  //Remove Session
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult Signup()

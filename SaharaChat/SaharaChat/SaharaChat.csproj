@@ -161,6 +161,7 @@
     <Content Include="Views\Prototype\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
+    <Content Include="Views\Shared\_SaharaLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
