@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SaharaChat.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,6 +12,8 @@ namespace SaharaChat.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            var db = new SaharaContext();
+            db.VerifyAccount("bullshit", "accu");
             return View();
         }
     }

@@ -7,6 +7,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Linq.Mapping;
 using System.Data.Linq;
 using System.Data.Entity.Core.Objects;
+using System.Data.SqlClient;
 
 namespace SaharaChat.Models
 {
@@ -16,17 +17,12 @@ namespace SaharaChat.Models
         public ObjectContext ObjectContext { get { return (this as IObjectContextAdapter).ObjectContext ?? null; } }
 
         public bool VerifyAccount(string userName, string password) {
-            var res = ObjectContext.ExecuteFunction<Nullable<int>>
-                ("dbo.VerifyAccount", 
-                new ObjectParameter("AccountName", userName), 
-                new ObjectParameter("AccountPwd", password))
+
+            var res = Database.SqlQuery<int?>("dbo.VerifyAccount @AccountName, @AccountPwd", 
+                new SqlParameter("AccountName", userName), new SqlParameter("AccountPwd", password))
                 .SingleOrDefault();
 
-            if (res.HasValue)
-                return (res == 1) ? true : false;
-            else
-                // Not sure if we should throw an exception here, maybe we should just return false???
-                throw new Exception("Account name does not exist in db!");
+            return res.HasValue;
         }
     }
 

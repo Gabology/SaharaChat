@@ -12,26 +12,6 @@ namespace SaharaChat.Controllers
 {  
     public class AccountController : Controller
     {
-        private bool VerifyAccount(string u, string p)
-        {
-            SqlConnection sqlConnection1 = new SqlConnection(@"Data Source=(localdb)\v11.0;Initial Catalog=SaharaDB");
-            SqlCommand cmd = new SqlCommand();
-            Object returnValue;
-
-            cmd.CommandText = "VerifyAccount";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Connection = sqlConnection1;
-            cmd.Parameters.Add(new SqlParameter("AccountName", u));
-            cmd.Parameters.Add(new SqlParameter("AccountPwd", p));
-
-            sqlConnection1.Open();
-            returnValue = cmd.ExecuteScalar();
-            sqlConnection1.Close();
-
-            return (int)returnValue == 1 ? true : false;
-
-        }
-
         // GET: Account
         public ActionResult Login()
         {
@@ -49,18 +29,14 @@ namespace SaharaChat.Controllers
                 return View(viewmodel);
             }
 
-            //
-            //var num =   db.Users
-            //            .Where(u => u.UserName==viewmodel.Username && u.Password == "0x0000007B")
-            //var verify = db.Database.SqlQuery<int>("dbo.VerifyAccount @AccountName, @AccountPwd", new SqlParameter("AccountName", viewmodel.Username), new SqlParameter("AccountPwd", viewmodel.Password));
-            //bool verified = verify;
+            var db = new SaharaContext();
 
             //Try to login using our given username and password
-            if (VerifyAccount(viewmodel.Username, viewmodel.Password))
+            if (db.VerifyAccount(viewmodel.Username, viewmodel.Password))
             {
                 //Login success
                 //Set cookie
-                var db = new SaharaContext();
+
                 var user = db.Users.Where(u => u.UserName == viewmodel.Username).FirstOrDefault();
 
                 //Session.SessionID does always seem to exist

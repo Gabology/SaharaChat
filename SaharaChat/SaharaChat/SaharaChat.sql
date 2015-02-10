@@ -1,7 +1,4 @@
-﻿DROP TABLE dbo.Users;
-
-
-CREATE TABLE dbo.Users (
+﻿CREATE TABLE dbo.Users (
 	[Id] int NOT NULL identity(0,1) primary key,
 	[UserName] varchar(50) NOT NULL,
 	[Password] varbinary(255) NOT NULL,
@@ -68,10 +65,8 @@ BEGIN
   
   SET @PwdWithSalt = @Salt + @AccountPwd;
 
-  IF (HASHBYTES('SHA1', @PwdWithSalt) = @PwdHash)
-    RETURN 0; -- TRUE
-  ELSE
-    RETURN 1; -- FALSE
+  SELECT 1
+  WHERE (HASHBYTES('SHA1',@PwdWithSalt) = @PwdHash)
 
 END;
 GO 
