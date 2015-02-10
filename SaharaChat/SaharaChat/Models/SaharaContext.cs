@@ -22,11 +22,11 @@ namespace SaharaChat.Models
                 new ObjectParameter("AccountPwd", password))
                 .SingleOrDefault();
 
-            if(res.HasValue)
-                return (res == 1) ? true : false
+            if (res.HasValue)
+                return (res == 1) ? true : false;
             else
                 // Not sure if we should throw an exception here, maybe we should just return false???
-                throw new Exception("Account name does not exist in db!")
+                throw new Exception("Account name does not exist in db!");
         }
     }
 
