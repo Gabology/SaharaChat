@@ -26,51 +26,50 @@
         var local = { "circle": myCircle };
         stage.addChild(local.circle);
 
-        function drawIt(e) {
-            var position = getMousePos(canvas, e);
-            local.circle.x = position.x;
-            local.circle.y = position.y;
+        $.connection.hub.start().done(function () {
 
-            stage.update();
-            $.connection.hub.start().done(function () {
+            function drawIt(e) {
+                var position = getMousePos(canvas, e);
+                local.circle.x = position.x;
+                local.circle.y = position.y;
+
+                stage.update();
                 hub.server.sendPosition(local.circle.x, local.circle.y, "@ViewBag.UserName");
-            });
-        }
-
-        hub.client.updatePositionOf = function (username, x, y) {
-            if (!clients.hasOwnProperty(username)) {
-                clients[username] = { "circle": new createjs.Shape() }
-                clients[username].circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
-                stage.addChild(clients[username].circle);
             }
 
-            clients[username].circle.x = x;
-            clients[username].circle.y = y;
-            stage.update();
-        }
+            hub.client.updatePositionOf = function (username, x, y) {
+                if (!clients.hasOwnProperty(username)) {
+                    clients[username] = { "circle": new createjs.Shape() }
+                    clients[username].circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
+                    stage.addChild(clients[username].circle);
+                }
 
-        hub.client.printConnections = function (con) { console.log(con) }
-        hub.client.displayMessage = function (username, msg) {
-            // PLACEHOLDER
-            // TODO: Display chat bubble at relative position of guid
-        }
+                clients[username].circle.x = x;
+                clients[username].circle.y = y;
+                stage.update();
+            }
 
-        function getMousePos(canvas, pos) {
-            var rect = canvas.getBoundingClientRect();
-            return {
-                x: pos.clientX - rect.left,
-                y: pos.clientY - rect.top
-            };
-        }
+            hub.client.printConnections = function (con) { console.log(con) }
+            hub.client.displayMessage = function (username, msg) {
+                // PLACEHOLDER
+                // TODO: Display chat bubble at relative position of guid
+            }
 
-        window.clients = clients;
-        window.drawIt = drawIt;
-        window.getClients = function () {
-            console.log("ping");
-            $.connection.hub.start().done(function () {
+            function getMousePos(canvas, pos) {
+                var rect = canvas.getBoundingClientRect();
+                return {
+                    x: pos.clientX - rect.left,
+                    y: pos.clientY - rect.top
+                };
+            }
+
+            window.clients = clients;
+            window.drawIt = drawIt;
+            window.getClients = function () {
+                console.log("ping");
                 hub.server.getConnections();
-            });
-        }
+            }
+        }); // $.connection.hub.start().done()
     });
 </script>
 
