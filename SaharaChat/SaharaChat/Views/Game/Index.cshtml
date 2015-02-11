@@ -11,13 +11,12 @@
 <div id="stage">
     <canvas id="myCanvas" width="1000" height="500" onclick="drawIt(event)"></canvas>
 </div>
-<input type="text" id="cursorX" size="5" />
-<input type="text" id="cursorY" size="5" />
 
 <script>
     $(document).ready(function () {
         var clients = {}
         var hub = $.connection.gameHub;
+        hub.state.UserName = "@ViewBag.UserName";
 
         var canvas = document.getElementById('myCanvas');
         var stage = new createjs.Stage("myCanvas");
@@ -34,23 +33,24 @@
 
             stage.update();
             $.connection.hub.start().done(function () {
-                hub.server.sendPosition(local.circle.x, local.circle.y);
+                hub.server.sendPosition(local.circle.x, local.circle.y, "@ViewBag.UserName");
             });
         }
 
-        hub.client.updatePositionOf = function (guid, x, y) {
-            if (!clients.hasOwnProperty(guid)) {
-                clients[guid] = { "circle": new createjs.Shape() }
-                clients[guid].circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
-                stage.addChild(clients[guid].circle);
+        hub.client.updatePositionOf = function (username, x, y) {
+            if (!clients.hasOwnProperty(username)) {
+                clients[username] = { "circle": new createjs.Shape() }
+                clients[username].circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
+                stage.addChild(clients[username].circle);
             }
 
-            clients[guid].circle.x = x;
-            clients[guid].circle.y = y;
+            clients[username].circle.x = x;
+            clients[username].circle.y = y;
             stage.update();
         }
 
-        hub.client.displayMessage = function (guid, msg) {
+        hub.client.printConnections = function (con) { console.log(con) }
+        hub.client.displayMessage = function (username, msg) {
             // PLACEHOLDER
             // TODO: Display chat bubble at relative position of guid
         }
@@ -65,6 +65,11 @@
 
         window.clients = clients;
         window.drawIt = drawIt;
+        window.getClients = function () {
+            $.connection.hub.start().done(function () {
+                hub.server.getConnections();
+            })
+        };
     });
 </script>
 
