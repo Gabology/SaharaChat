@@ -72,3 +72,6 @@ END;
 GO 
 
 exec dbo.CreateAccount @NewAccountName = 'test', @NewAccountPwd='123', @NewAccountColor='blue'
+exec dbo.CreateAccount @NewAccountName = 'gabriel', @NewAccountPwd='gabriel123', @NewAccountColor='blue'
+exec dbo.CreateAccount @NewAccountName = 'lisa', @NewAccountPwd='lisa123', @NewAccountColor='blue'
+exec dbo.CreateAccount @NewAccountName = 'erik', @NewAccountPwd='erik123', @NewAccountColor='blue'
