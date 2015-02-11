@@ -37,7 +37,7 @@ namespace SaharaChat.Hubs
 
         public void GetConnections()
         {
-            Clients.Caller.printConnections(string.Join(Environment.NewLine, ConnectedUsers));
+            Clients.Caller.printConnections("pong" + string.Join(Environment.NewLine, ConnectedUsers));
             
         }
 
