@@ -1,72 +1,9 @@
 ﻿@{
     Layout = "~/Views/Shared/_ErikLayout.cshtml";
-}
-@section scripts 
-{
-    <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
-    <script src="~/signalr/hubs"></script>
-    <script src="http://code.createjs.com/easeljs-0.8.0.min.js"></script>
+
 }
 
 
-<div id="stage">
-    <canvas id="myCanvas" width="1000" height="500" onclick="drawIt(event)"></canvas>
-</div>
-<input type="text" id="cursorX" size="5" />
-<input type="text" id="cursorY" size="5" />
-
-<script>
-    $(document).ready(function () {
-        var clients = {}
-        var hub = $.connection.gameHub;
-
-        var canvas = document.getElementById('myCanvas');
-        var stage = new createjs.Stage("myCanvas");
-        var myCircle = new createjs.Shape();
-        myCircle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
-
-        var local = { "circle": myCircle };
-
-        stage.addChild(local.circle);
-
-        function drawIt(e) {
-            var position = getMousePos(canvas, e);
-            local.circle.x = position.x;
-            local.circle.y = position.y;
-
-            stage.update();
-            $.connection.hub.start().done(function () {
-                hub.server.sendPosition(local.circle.x, local.circle.y);
-            });
-        }
-
-        hub.client.updatePositionOf = function (guid, x, y) {
-            if (!clients.hasOwnProperty(guid)) {
-                clients[guid] = { "circle": new createjs.Shape() }
-                clients[guid].circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
-                stage.addChild(clients[guid].circle);
-            }
-
-            clients[guid].circle.x = x;
-            clients[guid].circle.y = y;
-            stage.update();
-        }
-
-        hub.client.displayMessage = function (guid, msg) {
-            // PLACEHOLDER
-            // TODO: Display chat bubble at relative position of guid
-        }
-
-        function getMousePos(canvas, pos) {
-            var rect = canvas.getBoundingClientRect();
-            return {
-                x: pos.clientX - rect.left,
-                y: pos.clientY - rect.top
-            };
-        }
-        window.drawIt = drawIt;
-    });
-</script>
 
 
 

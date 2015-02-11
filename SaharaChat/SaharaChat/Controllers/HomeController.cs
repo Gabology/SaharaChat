@@ -12,8 +12,6 @@ namespace SaharaChat.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            var db = new SaharaContext();
-            db.VerifyAccount("bullshit", "accu");
             return View();
         }
     }
