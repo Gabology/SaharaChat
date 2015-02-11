@@ -46,10 +46,15 @@
                 clients[guid].circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
                 stage.addChild(clients[guid].circle);
             }
-            // TODO: Invoke a function to delete the visual object 
+
             clients[guid].circle.x = x;
             clients[guid].circle.y = y;
             stage.update();
+        }
+
+        hub.client.displayMessage = function (guid, msg) {
+            // PLACEHOLDER
+            // TODO: Display chat bubble at relative position of guid
         }
 
         function getMousePos(canvas, pos) {

@@ -146,7 +146,6 @@
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoggedInFilterAttribute.cs" />
-    <Compile Include="Controllers\PrototypeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -162,7 +161,6 @@
     </Content>
     <Content Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Prototype\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
     <Content Include="Views\Shared\_ErikLayout.cshtml" />
