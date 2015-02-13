@@ -8,9 +8,11 @@
     <script src="~/signalr/hubs"></script>
     <script src="http://code.createjs.com/easeljs-0.8.0.min.js"></script>
 }
+
 <div id="stage">
     <canvas id="myCanvas" width="1000" height="500" onclick="drawIt(event)"></canvas>
 </div>
+
 <script defer>
     var clients = {}
     var hub = $.connection.gameHub;
@@ -37,7 +39,7 @@
         $.each(obj, function (i, line) {
             console.log(line);
             $("#log").html(line.toString().split("\n").join("<br>"));
-        }); 
+        });
     }
 
     hub.client.printConnections = function (con) { console.log(con); }
@@ -82,4 +84,4 @@
     window.clients = clients;
     window.drawIt = drawIt;
 </script>
-<div id="log"></div>
+
