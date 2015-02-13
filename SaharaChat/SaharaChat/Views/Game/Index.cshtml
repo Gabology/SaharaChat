@@ -1,7 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_ErikLayout.cshtml";
 }
-
 @section scripts
 {
     <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
@@ -9,68 +8,67 @@
     <script src="http://code.createjs.com/easeljs-0.8.0.min.js"></script>
 }
 <div id="stage">
-    <canvas id="myCanvas" width="1000" height="500" onclick="drawIt(event)"></canvas>
+    <canvas id="myCanvas" width="1000" height="500"></canvas>
 </div>
+<script defer>
+    var clients = {}
+    var hub = $.connection.gameHub;
+    hub.state.UserName = "@ViewBag.UserName";
 
-<script>
-    $(document).ready(function () {
-        var clients = {}
-        var hub = $.connection.gameHub;
-        hub.state.UserName = "@ViewBag.UserName";
+    var canvas = document.getElementById('myCanvas');
+    var stage = new createjs.Stage("myCanvas");
+    var myCircle = new createjs.Shape();
+    myCircle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
 
-        var canvas = document.getElementById('myCanvas');
-        var stage = new createjs.Stage("myCanvas");
-        var myCircle = new createjs.Shape();
-        myCircle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
+    var local = { "circle": myCircle };
+    stage.addChild(local.circle);
 
-        var local = { "circle": myCircle };
-        stage.addChild(local.circle);
+    function getMousePos(canvas, pos) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+            x: pos.clientX - rect.left,
+            y: pos.clientY - rect.top
+        };
+    }
 
-        $.connection.hub.start().done(function () {
+    hub.client.printConnections = function (con) { console.log(con) }
+    hub.client.displayMessage = function (username, msg) {
+        // PLACEHOLDER
+        // TODO: Display chat bubble at relative position of guid
+    }
 
-            function drawIt(e) {
-                var position = getMousePos(canvas, e);
-                local.circle.x = position.x;
-                local.circle.y = position.y;
+    hub.client.updatePositionOf = function (username, x, y) {
+        if (!clients.hasOwnProperty(username)) {
+            clients[username] = { "circle": new createjs.Shape() }
+            clients[username].circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
+            stage.addChild(clients[username].circle);
+        }
 
-                stage.update();
-                hub.server.sendPosition(local.circle.x, local.circle.y, "@ViewBag.UserName");
-            }
+        clients[username].circle.x = x;
+        clients[username].circle.y = y;
+        stage.update();
+    }
 
-            hub.client.updatePositionOf = function (username, x, y) {
-                if (!clients.hasOwnProperty(username)) {
-                    clients[username] = { "circle": new createjs.Shape() }
-                    clients[username].circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
-                    stage.addChild(clients[username].circle);
-                }
+    window.getClients = function () {
+        hub.server.getConnections();
+        return "ping"
+    }
 
-                clients[username].circle.x = x;
-                clients[username].circle.y = y;
-                stage.update();
-            }
+    $.connection.hub.start()
+        .done(function () { document.querySelector("#myCanvas").onclick = drawIt(event) })
+        .fail(function () { console.log("Connection to server failed") });
 
-            hub.client.printConnections = function (con) { console.log(con) }
-            hub.client.displayMessage = function (username, msg) {
-                // PLACEHOLDER
-                // TODO: Display chat bubble at relative position of guid
-            }
 
-            function getMousePos(canvas, pos) {
-                var rect = canvas.getBoundingClientRect();
-                return {
-                    x: pos.clientX - rect.left,
-                    y: pos.clientY - rect.top
-                };
-            }
+    function drawIt(e) {
+        var position = getMousePos(canvas, e);
+        local.circle.x = position.x;
+        local.circle.y = position.y;
 
-            window.clients = clients;
-            window.drawIt = drawIt;
-            window.getClients = function () {
-                console.log("ping");
-                hub.server.getConnections();
-            }
-        });
-    });
+        stage.update();
+        hub.server.sendPosition(local.circle.x, local.circle.y, "@ViewBag.UserName");
+    }
+ 
+    window.clients = clients;
+    window.drawIt = drawIt;
 </script>
-
 
