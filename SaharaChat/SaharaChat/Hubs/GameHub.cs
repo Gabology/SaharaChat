@@ -4,12 +4,20 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 using System.Diagnostics;
+using SaharaChat.Models;
 
 namespace SaharaChat.Hubs
 {
     public class GameHub : Hub
     {
         private static List<string> log = new List<string>();
+        private static SaharaContext db = new SaharaContext();
+
+        private string GetCallerUserName()
+        {
+            var sessId = Context.RequestCookies["ASP.NET_SessionID"].Value;
+            return db.Users.SingleOrDefault(user => user.SessionID == sessId).UserName;
+        }
 
         private void Log(string input)
         {

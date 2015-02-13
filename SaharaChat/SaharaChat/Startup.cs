@@ -9,7 +9,6 @@ namespace SaharaChat
     {
         public void Configuration(IAppBuilder app)
         {
-            GlobalHost.DependencyResolver.Register(typeof(IUserIdProvider), () => new UserIdProvider());
             // Any connection or hub wire up and configuration should go here
             app.MapSignalR();
         }

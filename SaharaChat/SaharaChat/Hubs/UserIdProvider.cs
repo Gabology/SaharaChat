@@ -13,10 +13,14 @@ namespace SaharaChat.Hubs
 
         public string GetUserId(IRequest request)
         {
-            return 
-                _db.Users
-                .SingleOrDefault(user => user.SessionID == request.Cookies["ASP.NET_SessionID"].Value)
-                .UserName;
+            Cookie sessionId;
+            if (request.Cookies.TryGetValue("ASP.NET_SessionID", out sessionId))
+                return
+                    _db.Users
+                    .SingleOrDefault(user => user.SessionID == sessionId.Value)
+                    .UserName;
+            else
+                return string.Empty;
         }
     }
 }
