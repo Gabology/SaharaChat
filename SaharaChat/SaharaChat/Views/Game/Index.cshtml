@@ -4,6 +4,7 @@
 @section scripts
 {
     <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
+    <script src="~/Scripts/json2.js"></script>
     <script src="~/signalr/hubs"></script>
     <script src="http://code.createjs.com/easeljs-0.8.0.min.js"></script>
 }
@@ -32,10 +33,12 @@
         };
     }
 
-    hub.client.printLog = function (arr) {
-        $.each(arr, function (i, line) {
+    hub.client.printLog = function (json) {
+        var obj = JSON.parse(json);
+        $.each(obj, function (i, line) {
             console.log(line);
-        });
+            $("#log").html(line.toString().split("\n").join("<br>"));
+        }); 
     }
 
     hub.client.printConnections = function (con) { console.log(con); }
@@ -80,3 +83,4 @@
     window.clients = clients;
     window.drawIt = drawIt;
 </script>
+<div id="log"></div>
