@@ -12,5 +12,7 @@ namespace SaharaChat.Models
         public string UserName { get; set; }
         [Required]
         public string Password { get; set; }
+        [Required]
+        public string RepeatPassword { get; set; }
     }
 }
