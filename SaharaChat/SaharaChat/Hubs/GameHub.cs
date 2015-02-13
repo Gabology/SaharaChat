@@ -26,13 +26,13 @@ namespace SaharaChat.Hubs
 
         public override System.Threading.Tasks.Task OnConnected()
         {
-            Log("Client connected: " + Context.ConnectionId);
+            Log("Client connected: " + GetCallerUserName());
             return base.OnConnected();
         }
 
         public override System.Threading.Tasks.Task OnDisconnected(bool stopCalled)
         {
-            Log("Client disconnected: " + Context.ConnectionId);
+            Log("Client disconnected: " + GetCallerUserName());
             return base.OnDisconnected(stopCalled);
         }
 
