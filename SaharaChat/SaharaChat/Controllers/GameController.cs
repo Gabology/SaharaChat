@@ -16,7 +16,6 @@ namespace SaharaChat.Controllers
         public ActionResult Index()
         {
             //Let the games begin!
-            ViewBag.UserName = Session["UserName"];
             return View();
         }
     }
