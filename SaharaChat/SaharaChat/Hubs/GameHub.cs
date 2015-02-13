@@ -38,7 +38,7 @@ namespace SaharaChat.Hubs
 
         public void SendPosition(int x, int y, string userName)
         {
-            Log(string.Format("Incoming position from: {0}\nPOSITION: {1}", Context.ConnectionId, Tuple.Create(x, y)));
+            Log(string.Format("Incoming request from {0} move to: {1}", GetCallerUserName(), Tuple.Create(x, y)));
             // Invoke callback in all other clients, informing them of callers GUID and new position
             Clients.Others.updatePositionOf(userName, x, y);
         }
