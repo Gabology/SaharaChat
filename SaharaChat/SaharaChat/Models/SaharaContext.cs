@@ -14,7 +14,6 @@ namespace SaharaChat.Models
     public class SaharaContext : DbContext
     {
         public DbSet<User> Users { get; set; }
-        public ObjectContext ObjectContext { get { return (this as IObjectContextAdapter).ObjectContext ?? null; } }
 
         public bool VerifyAccount(string userName, string password) {
 

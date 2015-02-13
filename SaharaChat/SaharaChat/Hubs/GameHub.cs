@@ -9,36 +9,40 @@ namespace SaharaChat.Hubs
 {
     public class GameHub : Hub
     {
-        private List<string> ConnectedUsers = new List<string>();
+        private static List<string> log = new List<string>();
+
+        private void Log(string input)
+        {
+            log.Add(string.Format("[{0}] {1}", DateTime.Now, input));
+        }
+
         public override System.Threading.Tasks.Task OnConnected()
         {
-            ConnectedUsers.Add(Clients.Caller.UserName);
+            Log("Client connected: " + Context.ConnectionId);
             return base.OnConnected();
         }
 
         public override System.Threading.Tasks.Task OnDisconnected(bool stopCalled)
         {
-            Trace.Write("Client disconnected!");
+            Log("Client disconnected: " + Context.ConnectionId);
             return base.OnDisconnected(stopCalled);
-        }
-
-        public void SendMessage(string message)
-        {
-            var connectionId = Context.ConnectionId;
-            Clients.Others.displayMessage(connectionId, message);
         }
 
         public void SendPosition(int x, int y, string userName)
         {
-            Trace.WriteLine(string.Format("INCOMING POSITION FROM: {0}\nPOSITION: {1}", Context.ConnectionId, Tuple.Create(x, y)));
+            Log(string.Format("Incoming position from: {0}\nPOSITION: {1}", Context.ConnectionId, Tuple.Create(x, y)));
             // Invoke callback in all other clients, informing them of callers GUID and new position
             Clients.Others.updatePositionOf(userName, x, y);
         }
 
+        public void GetLog()
+        {
+            Clients.Caller.printLog(Newtonsoft.Json.JsonConvert.SerializeObject(log));
+        }
+
         public void GetConnections()
         {
-            Clients.Caller.printConnections("pong" + string.Join(Environment.NewLine, ConnectedUsers));
-            
+            Clients.Caller.printConnections("pong");
         }
 
     }
