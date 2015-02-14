@@ -15,8 +15,15 @@ namespace SaharaChat.Controllers
         [LoggedInFilter]   
         public ActionResult Index()
         {
+            var db = new SaharaContext();
+
+            // Instantiate an avatar containing logged in user as name and color as color
+            var sess = Request.Cookies["ASP.NET_SessionID"].Value;
+            var user = db.Users.SingleOrDefault(u => u.SessionID == sess);
+            var avatar = new Avatar(user.UserName, user.Color);
+
             //Let the games begin!
-            return View();
+            return View(avatar);
         }
     }
 }

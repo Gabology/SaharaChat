@@ -1,4 +1,6 @@
-﻿@{
+﻿@model SaharaChat.Models.Avatar
+
+@{
     Layout = "~/Views/Shared/_ErikLayout.cshtml";
 }
 @section scripts
@@ -34,6 +36,7 @@
     var myCircle = new createjs.Shape();
     myCircle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
 
+    var local2 = @Html.Raw(Json.Encode(Model));
     var local = { "circle": myCircle };
     stage.addChild(local.circle);
 

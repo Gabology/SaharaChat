@@ -156,6 +156,7 @@
     </Compile>
     <Compile Include="Hubs\GameHub.cs" />
     <Compile Include="Models\AccountLoginViewModel.cs" />
+    <Compile Include="Models\Avatar.cs" />
     <Compile Include="Models\CreateAccountViewModel.cs" />
     <Compile Include="Models\SaharaContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
