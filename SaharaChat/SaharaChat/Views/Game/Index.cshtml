@@ -51,7 +51,7 @@
     hub.client.printLog = function (json) {
         var obj = JSON.parse(json);
         $.each(obj, function (i, line) {
-            $("#log").html(line.split("\n").join("<br>"));
+            $("#log").prepend(line.split("\\n").join("<br>") + "<br>");
         });
     }
 
