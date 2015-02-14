@@ -36,22 +36,18 @@ namespace SaharaChat.Hubs
             return base.OnDisconnected(stopCalled);
         }
 
-        public void SendPosition(int x, int y, string userName)
+        public void SendPosition(float x, float y)
         {
-            Log(string.Format("Incoming request from {0} move to: {1}", GetCallerUserName(), Tuple.Create(x, y)));
+            var client = GetCallerUserName();
+            Log(string.Format("Incoming request from {0} move to: {1}", client, Tuple.Create(x, y)));
+            
             // Invoke callback in all other clients, informing them of callers GUID and new position
-            Clients.Others.updatePositionOf(userName, x, y);
+            Clients.Others.updatePositionOf(client, x, y);
         }
 
         public void GetLog()
         {
             Clients.Caller.printLog(Newtonsoft.Json.JsonConvert.SerializeObject(log));
         }
-
-        public void GetConnections()
-        {
-            Clients.Caller.printConnections("pong");
-        }
-
     }
 }

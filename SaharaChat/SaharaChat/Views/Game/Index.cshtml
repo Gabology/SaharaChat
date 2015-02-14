@@ -13,6 +13,17 @@
     <canvas id="myCanvas" width="1000" height="500" onclick="drawIt(event)"></canvas>
 </div>
 
+<div id="log"
+     style="
+    font-size: 14px;
+    width:900px;
+    height:200px;
+    background:#333;
+    padding:0.5em;
+    overflow:auto;
+    color:#fff;
+    font-family:monospace;"></div>
+
 <script defer>
     var clients = {}
     var hub = $.connection.gameHub;
@@ -37,12 +48,9 @@
     hub.client.printLog = function (json) {
         var obj = JSON.parse(json);
         $.each(obj, function (i, line) {
-            console.log(line);
-            $("#log").html(line.toString().split("\n").join("<br>"));
+            $("#log").html(line.split("\n").join("<br>"));
         });
     }
-
-    hub.client.printConnections = function (con) { console.log(con); }
 
     hub.client.updatePositionOf = function (username, x, y) {
         if (!clients.hasOwnProperty(username)) {
@@ -56,32 +64,26 @@
         stage.update();
     }
 
+    function drawIt(e) {
+        var position = getMousePos(canvas, e);
+        local.circle.x = position.x;
+        local.circle.y = position.y;
+
+        // But not this..
+        hub.server.sendPosition(local.circle.x, local.circle.y)
+            .done(function () { console.log("(CLIENT) Successfully sent updated position to server!") })
+            .fail(function (error) { console.log("(CLIENT) Failed to send position to server, error: " + error) });
+
+        stage.update();
+    }
+
     function getLog() {
         hub.server.getLog();
         return "Server log requested..."
     }
 
-    window.getClients = function () {
-        hub.server.getConnections();
-        return "ping"
-    }
-
     $.connection.hub.start()
-        .done(function () { connected = true })
+        .done(function () { console.log("(CLIENT) Connected!"); })
         .fail(function () { console.log("Connection to server failed") });
-
-    function drawIt(e) {
-        if (connected) {
-            var position = getMousePos(canvas, e);
-            local.circle.x = position.x;
-            local.circle.y = position.y;
-
-            stage.update();
-            hub.server.sendPosition(local.circle.x, local.circle.y, "@ViewBag.UserName");
-        }
-    }
-
-    window.clients = clients;
-    window.drawIt = drawIt;
 </script>
 
