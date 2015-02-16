@@ -81,7 +81,8 @@ namespace SaharaChat.Controllers
             if(!ModelState.IsValid)
                 return View(model);
 
-            //Todo: peta in usér i db
+            var db = new SaharaContext();
+            db.CreateAccount(model);
 
             return RedirectToAction("Login", "Account");
         }
