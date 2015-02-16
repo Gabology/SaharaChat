@@ -51,7 +51,7 @@ namespace SaharaChat.Controllers
             {
 
                 //Failed login
-                ModelState.AddModelError(String.Empty, "Wrong credentials. Try again.");    //String.Empty apparently makes the error show up in ValidationSummary...
+                ModelState.AddModelError("WrongCredentials", "Wrong credentials. Try again.");    //String.Empty apparently makes the error show up in ValidationSummary...
                 return View(viewmodel);
             }
 
