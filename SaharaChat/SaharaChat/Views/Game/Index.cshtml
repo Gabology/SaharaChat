@@ -15,6 +15,9 @@
     <canvas id="myCanvas" width="1000" height="500" onclick="drawIt(event)"></canvas>
 </div>
 
+<input type="text" id="inTb" />
+<button id="sendMsgBtn">Send</button>
+
 <div id="log"
      style="
     font-size: 14px;
@@ -47,6 +50,25 @@
             y: pos.clientY - rect.top
         };
     }
+
+    $("#inTb").keypress(function(e) {
+        if(e.which == 13) {
+            $("#sendMsgBtn").click();
+            this.value = "";
+        }
+    })
+
+    hub.client.printMessage = function(msg) {
+        console.log(msg);
+        $("#log").prepend(msg + "<br>");
+    }
+
+    $("#sendMsgBtn").click(function() {
+        hub.server.sendMessage($("#inTb").val())
+            .done(function() { console.log("Message sent") })
+            .fail(function () { console.log("Failed to send message")});
+        this.value = "";
+    })
 
     hub.client.printLog = function (json) {
         var obj = JSON.parse(json);
