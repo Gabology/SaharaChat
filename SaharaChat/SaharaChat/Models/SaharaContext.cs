@@ -23,6 +23,13 @@ namespace SaharaChat.Models
 
             return res.HasValue;
         }
+
+        public void CreateAccount(CreateAccountViewModel model) {
+            Database.ExecuteSqlCommand("exec dbo.CreateAccount @NewAccountName, @NewAccountPwd, @NewAccountColor",
+                                        new SqlParameter("NewAccountName", model.UserName),
+                                        new SqlParameter("NewAccountPwd", model.Password),
+                                        new SqlParameter("NewAccountColor", model.Color));
+        }
     }
 
 
