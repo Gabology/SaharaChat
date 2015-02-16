@@ -82,6 +82,8 @@ namespace SaharaChat.Controllers
                 return View(model);
 
             //Todo: peta in usér i db
+
+            return RedirectToAction("Login", "Account");
         }
     }
 }

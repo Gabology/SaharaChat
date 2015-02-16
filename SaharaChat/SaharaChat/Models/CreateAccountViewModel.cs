@@ -17,5 +17,6 @@ namespace SaharaChat.Models
         [DataType(DataType.Password)]
         public string RepeatPassword { get; set; }
         public bool SamePassword { get { return Password == RepeatPassword; } }
+        public string Color { get; set; }
     }
 }
