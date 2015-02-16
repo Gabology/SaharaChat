@@ -69,7 +69,19 @@ namespace SaharaChat.Controllers
 
         public ActionResult Signup()
         {
+
             return View();
+        }
+        [HttpPost]
+        public ActionResult Signup(CreateAccountViewModel model)
+        {
+            if (!model.SamePassword)
+                ModelState.AddModelError("RepeatPassword", "Det här blev ju inte rätt");
+
+            if(!ModelState.IsValid)
+                return View(model);
+
+            //Todo: peta in usér i db
         }
     }
 }
