@@ -45,6 +45,10 @@ namespace SaharaChat.Hubs
             Clients.Others.updatePositionOf(client, x, y);
         }
 
+        public void SendMessage(string msg) {
+            Clients.All.printMessage(GetCallerUserName() + ": " + msg);
+        }
+
         public void GetLog()
         {
             Clients.Caller.printLog(Newtonsoft.Json.JsonConvert.SerializeObject(log));
