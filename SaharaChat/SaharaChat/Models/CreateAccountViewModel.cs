@@ -11,8 +11,11 @@ namespace SaharaChat.Models
         [Required]
         public string UserName { get; set; }
         [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         [Required]
+        [DataType(DataType.Password)]
         public string RepeatPassword { get; set; }
+        public bool SamePassword { get { return Password == RepeatPassword; } }
     }
 }
