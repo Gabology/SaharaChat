@@ -7,7 +7,7 @@ using System.Web;
 namespace SaharaChat.Models
 {
     public class CreateAccountViewModel
-    {
+    {//test
         [Required]
         public string UserName { get; set; }
         [Required]
