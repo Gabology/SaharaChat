@@ -9,6 +9,7 @@
     <script src="~/Scripts/json2.js"></script>
     <script src="~/signalr/hubs"></script>
     <script src="http://code.createjs.com/easeljs-0.8.0.min.js"></script>
+    <script src="https://code.createjs.com/tweenjs-0.6.0.min.js"></script>
 }
 
 <div id="stage">
@@ -34,14 +35,17 @@
     var hub = $.connection.gameHub;
     var connected = false;
 
+    var local2 = @Html.Raw(Json.Encode(Model));
     var canvas = document.getElementById('myCanvas');
     var stage = new createjs.Stage("myCanvas");
     var myCircle = new createjs.Shape();
-    myCircle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
+    myCircle.graphics.beginFill(local2.Color).drawCircle(0, 0, 20);
 
-    var local2 = @Html.Raw(Json.Encode(Model));
     var local = { "circle": myCircle };
     stage.addChild(local.circle);
+
+    createjs.Ticker.setFPS(60);
+    createjs.Ticker.addEventListener("tick", stage);
 
     function getMousePos(canvas, pos) {
         var rect = canvas.getBoundingClientRect();
@@ -80,26 +84,33 @@
     hub.client.updatePositionOf = function (username, x, y) {
         if (!clients.hasOwnProperty(username)) {
             clients[username] = { "circle": new createjs.Shape() }
-            clients[username].circle.graphics.beginFill("Red").drawCircle(0, 0, 20);
+            clients[username].circle.graphics.beginFill("Red").drawCircle(x, y, 20);
             stage.addChild(clients[username].circle);
+            stage.update()
         }
+        else {
+            var abX = clients[username].circle.x;
+            var abY = clients[username].circle.y;
+            var hypotenuse = Math.sqrt(abX * abX + abY * abY);
 
-        clients[username].circle.x = x;
-        clients[username].circle.y = y;
-        stage.update();
+            createjs.Tween.get(clients[username].circle, {override: true})
+                .to({'x':x, 'y':y }, hypotenuse * 2.0, createjs.Ease.linear());
+        }
     }
 
     function drawIt(e) {
         var position = getMousePos(canvas, e);
-        local.circle.x = position.x;
-        local.circle.y = position.y;
+        
+        var x = local.circle.x - position.x;
+        var y = local.circle.y - position.y;
+        var hypotenuse = Math.sqrt(x * x + y * y);
 
-        // But not this..
-        hub.server.sendPosition(local.circle.x, local.circle.y)
+        createjs.Tween.get(local.circle, {override: true})
+            .to({ x : position.x, y: position.y }, hypotenuse * 2.0, createjs.Ease.linear());
+
+        hub.server.sendPosition(position.x, position.y)
             .done(function () { console.log("(CLIENT) Successfully sent updated position to server!") })
             .fail(function (error) { console.log("(CLIENT) Failed to send position to server, error: " + error) });
-
-        stage.update();
     }
 
     function getLog() {
