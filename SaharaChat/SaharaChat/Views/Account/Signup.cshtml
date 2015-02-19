@@ -4,19 +4,6 @@
     Layout = "~/Views/Shared/_ErikLayout.cshtml";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Signup</title>
-    <link rel="stylesheet" href="~/Content/StyleSheet.css" />
-    <script src="~/Scripts/jquery-1.8.0.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/Scripts/colorStyle.js"></script>
-</head>
-<body>
     @using (Html.BeginForm()) 
     {
         @Html.AntiForgeryToken()
@@ -72,5 +59,12 @@
         @Html.ActionLink("Start Chatting", "Index")
     </div>
 
-</body>
-</html>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/spectrum.js"></script>
+    <script src="~/Scripts/colorStyle.js" defer></script>
+    <link rel="stylesheet" href="~/Content/StyleSheet.css" />
+}
