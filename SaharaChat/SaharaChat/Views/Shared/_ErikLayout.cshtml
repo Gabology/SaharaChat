@@ -8,9 +8,9 @@
         <!-- css -->
         <link href="/Content/bootstrap.min.css" rel="stylesheet">
         <!-- Scripts -->
-        <script src="~/Scripts/platform.js"></script>   <!-- Polyfill for color picker. Must be, for maximum compatibility, be first script. -->
         <script src="~/Scripts/jquery-2.1.3.min.js"></script>
         <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/Scripts/platform.js"></script>   <!-- Polyfill for color picker. Should, for maximum compatibility, be first script. But if it is before bootstrap.min.js, we get error on every click. -->
         @RenderSection("scripts", false)
     </head>
     <body>
