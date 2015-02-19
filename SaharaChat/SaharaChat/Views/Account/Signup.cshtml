@@ -55,6 +55,10 @@
 
     <color-picker width="200" height="200"></color-picker>
 
+    <h3>&lt;color-picker&gt;</h3>
+    <div style="width: 200px; height: 30px; border: solid 1px #eee;" id="colorDisplay"></div>
+    <div id="colorValues"></div>
+
     }
     
     <div>
@@ -75,3 +79,15 @@
         <link rel="stylesheet" href="~/Content/StyleSheet.css" />
     -->
 }
+
+
+<script type="text/javascript">
+    var cp = document.querySelector('color-picker');
+    var display = document.getElementById('colorDisplay');
+    var output = document.getElementById('colorValues');
+    //listen for 'colorselected' event on the color-picker element which returns a details param with hex and rgb values
+    cp.addEventListener('colorselected', function (e) {
+        output.innerHTML = e.detail.hex + ' (r=' + e.detail.rgb.r + ', g=' + e.detail.rgb.g + ', b=' + e.detail.rgb.b + ')';
+        display.style.backgroundColor = e.detail.hex;
+    });
+</script>
