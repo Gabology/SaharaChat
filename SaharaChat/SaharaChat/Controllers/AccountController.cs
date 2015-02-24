@@ -76,7 +76,7 @@ namespace SaharaChat.Controllers
         public ActionResult Signup(CreateAccountViewModel model)
         {
             if (!model.SamePassword)
-                ModelState.AddModelError("RepeatPassword", "Det här blev ju inte rätt");
+                ModelState.AddModelError("RepeatPassword", "Password and RepeatPassword must be the same. Try again.");
 
             if(!ModelState.IsValid)
                 return View(model);
