@@ -81,7 +81,7 @@
         });
     }
 
-    hub.client.updatePositionOf = function (username, x, y) {
+    hub.client.updatePositionOf = function (username, pos) {
         if (!clients.hasOwnProperty(username)) {
             clients[username] = { "circle": new createjs.Shape() }
             clients[username].circle.graphics.beginFill("Red").drawCircle(x, y, 20);
@@ -94,7 +94,7 @@
             var hypotenuse = Math.sqrt(abX * abX + abY * abY);
 
             createjs.Tween.get(clients[username].circle, {override: true})
-                .to({'x':x, 'y':y }, hypotenuse * 2.0, createjs.Ease.linear());
+                .to({ x : pos.x, y : pos.y }, hypotenuse * 2.0, createjs.Ease.linear());
         }
     }
 

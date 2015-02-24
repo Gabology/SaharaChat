@@ -36,7 +36,7 @@ namespace SaharaChat.Hubs
             return base.OnDisconnected(stopCalled);
         }
 
-        public void SendPosition(float x, float y)
+        public void SendPosition(double x, double y)
         {
             var client = GetCallerUserName();
             Log(string.Format("Incoming request from {0} move to: {1}", client, Tuple.Create(x, y)));
