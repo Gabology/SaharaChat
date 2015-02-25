@@ -93,8 +93,12 @@
             var abY = clients[username].circle.y;
             var hypotenuse = Math.sqrt(abX * abX + abY * abY);
 
-            createjs.Tween.get(clients[username].circle, {override: true})
-                .to({ x : pos.x, y : pos.y }, hypotenuse * 2.0, createjs.Ease.linear());
+            //createjs.Tween.get(clients[username].circle, {override: true})
+            //    .to({ x : pos.x, y : pos.y }, hypotenuse * 2.0, createjs.Ease.linear());
+
+            clients[username].circle.x = pos.x;
+            clients[username].circle.y = pos.y;
+            stage.update();
         }
     }
 
