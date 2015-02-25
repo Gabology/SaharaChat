@@ -84,7 +84,7 @@
     hub.client.updatePositionOf = function (username, pos) {
         if (!clients.hasOwnProperty(username)) {
             clients[username] = { "circle": new createjs.Shape() }
-            clients[username].circle.graphics.beginFill("Red").drawCircle(x, y, 20);
+            clients[username].circle.graphics.beginFill("Red").drawCircle(pos.x, pos.y, 20);
             stage.addChild(clients[username].circle);
             stage.update()
         }
