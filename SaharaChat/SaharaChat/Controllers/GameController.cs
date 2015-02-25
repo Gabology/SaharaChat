@@ -8,6 +8,7 @@ using SaharaChat.Models;
 
 namespace SaharaChat.Controllers
 {
+    [HandleError]
     public class GameController : Controller
     {
         // GET: Game

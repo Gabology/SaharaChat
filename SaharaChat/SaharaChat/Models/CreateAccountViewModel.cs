@@ -15,6 +15,7 @@ namespace SaharaChat.Models
         public string Password { get; set; }
         [Required]
         [DataType(DataType.Password)]
+        [Display(Name = "Repeat password")]
         public string RepeatPassword { get; set; }
         public bool SamePassword { get { return Password == RepeatPassword; } }
         [Required]

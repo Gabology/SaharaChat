@@ -10,6 +10,7 @@ using System.Data;
 
 namespace SaharaChat.Controllers
 {  
+    [HandleError]
     public class AccountController : Controller
     {
         // GET: Account

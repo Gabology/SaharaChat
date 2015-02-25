@@ -42,7 +42,7 @@ namespace SaharaChat.Hubs
             Log(string.Format("Incoming request from {0} move to: {1}", client, Tuple.Create(x, y)));
             
             // Invoke callback in all other clients, informing them of callers GUID and new position
-            Clients.Others.updatePositionOf(client, x, y);
+            Clients.Others.updatePositionOf(client, new { x = x, y = y });
         }
 
         public void SendMessage(string msg) {

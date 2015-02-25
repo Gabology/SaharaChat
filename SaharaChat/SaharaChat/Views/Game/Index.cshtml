@@ -70,7 +70,7 @@
     $("#sendMsgBtn").click(function() {
         hub.server.sendMessage($("#inTb").val())
             .done(function() { console.log("Message sent") })
-            .fail(function () { console.log("Failed to send message")});
+            .fail(function() { console.log("Failed to send message")});
         this.value = "";
     })
 
@@ -109,8 +109,8 @@
             .to({ x : position.x, y: position.y }, hypotenuse * 2.0, createjs.Ease.linear());
 
         hub.server.sendPosition(position.x, position.y)
-            .done(function () { console.log("(CLIENT) Successfully sent updated position to server!") })
-            .fail(function (error) { console.log("(CLIENT) Failed to send position to server, error: " + error) });
+            .done(function() { console.log("(CLIENT) Successfully sent updated position to server!") })
+            .fail(function(error) { console.log("(CLIENT) Failed to send position to server, error: " + error) });
     }
 
     function getLog() {
@@ -119,7 +119,7 @@
     }
 
     $.connection.hub.start()
-        .done(function () { console.log("(CLIENT) Connected!"); })
-        .fail(function () { console.log("Connection to server failed") });
+        .done(function() { console.log("(CLIENT) Connected!"); })
+        .fail(function() { console.log("Connection to server failed") });
 </script>
 
