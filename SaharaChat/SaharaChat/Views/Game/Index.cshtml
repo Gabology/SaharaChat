@@ -40,13 +40,27 @@
     var stage = new createjs.Stage("myCanvas");
     var myCircle = new createjs.Shape();
     myCircle.graphics.beginFill(local2.Color).drawCircle(0, 0, 20);
-    var palm = new createjs.Bitmap("/Content/palm-tree-on-island-hi.png");
-    palm.x = 100;
-    palm.y = 100;
+
+    var palm1 = new createjs.Bitmap("/Content/palm-tree-on-island-hi.png");
+    palm1.x = 100;
+    palm1.y = 100;
+    var palm2 = new createjs.Bitmap("/Content/palm-tree-on-island-hi.png");
+    palm2.x = 400;
+    palm2.y = 400; 
+    var palm3 = new createjs.Bitmap("/Content/palm-tree-on-island-hi.png");
+    palm3.x = 650;
+    palm3.y = 250;
+
+    var skeleton = new createjs.Bitmap("/Content/animalskull.png");
+    skeleton.x = 250;
+    skeleton.y = 202;
 
     var local = { "circle": myCircle };
     stage.addChild(local.circle);
-    stage.addChild(palm);
+    stage.addChild(palm1);
+    stage.addChild(palm2);
+    stage.addChild(palm3);
+    stage.addChild(skeleton);
 
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", stage);
