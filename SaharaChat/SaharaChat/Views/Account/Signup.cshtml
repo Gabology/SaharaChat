@@ -9,8 +9,8 @@
         @Html.AntiForgeryToken()
         
         <div class="form-horizontal">
-            <h4>Create Account</h4>
-            <hr />
+            <h4>Sign Up</h4>
+            <hr id="hrSign"/>
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
                 @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
