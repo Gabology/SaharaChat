@@ -39,7 +39,7 @@ namespace SaharaChat.Hubs
         public void SendPosition(string color, double x, double y)
         {
             var client = GetCallerUserName();
-            Log(string.Format("Incoming request from {0} move to: {1}, color: {2}", client, Tuple.Create(x, y)));
+            Log(string.Format("Incoming request from {0} move to: {1}", client, Tuple.Create(x, y)));
             
             // Invoke callback in all other clients, informing them of callers GUID and new position
             Clients.Others.updatePositionOf(client, new { x = x, y = y, color = color });
