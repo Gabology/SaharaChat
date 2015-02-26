@@ -26,3 +26,7 @@
 color-picker{
     padding-top: 10px;
 }
+
+#myCanvas{
+    border: 1px solid #bf5a16;
+}
