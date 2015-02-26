@@ -33,8 +33,6 @@
 <script defer>
     var clients = {}
     var hub = $.connection.gameHub;
-    var connected = false;
-
 
     var local2 = @Html.Raw(Json.Encode(Model));
     var canvas = document.getElementById('myCanvas');
@@ -45,6 +43,9 @@
     
     var myCircle = new createjs.Shape(myBubble);
     myCircle.graphics.beginFill(local2.Color).drawCircle(0, 0, 20);
+    
+    var local = { circle : myCircle,
+                  bubble : myBubble };
 
     var palm1 = new createjs.Bitmap("/Content/palm-tree-on-island-hi.png");
     palm1.x = 100;
@@ -55,17 +56,15 @@
     var palm3 = new createjs.Bitmap("/Content/palm-tree-on-island-hi.png");
     palm3.x = 650;
     palm3.y = 250;
-
     var skeleton = new createjs.Bitmap("/Content/animalskull.png");
     skeleton.x = 250;
     skeleton.y = 202;
 
-    var local = { "circle": myCircle };
-    stage.addChild(local.circle);
     stage.addChild(palm1);
     stage.addChild(palm2);
     stage.addChild(palm3);
     stage.addChild(skeleton);
+    stage.addChild(local.circle);
 
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", stage);
