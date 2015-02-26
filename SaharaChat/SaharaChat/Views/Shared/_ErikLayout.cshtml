@@ -30,7 +30,7 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li class="@((string)ViewContext.RouteData.Values["controller"] == "Home" && (string)ViewContext.RouteData.Values["action"] == "Index" ? "active" : "")"><a href="/">Home</a></li>
-                        <li class="@((string)ViewContext.RouteData.Values["controller"] == "Game" && (string)ViewContext.RouteData.Values["action"] == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Game")">Game</a></li>
+                        <li class="@((string)ViewContext.RouteData.Values["controller"] == "Chat" && (string)ViewContext.RouteData.Values["action"] == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Game")">Game</a></li>
                         @if (HttpContext.Current.Session["UserName"] != null)
                         {
                             <li class="dropdown">
