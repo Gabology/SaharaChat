@@ -35,10 +35,15 @@
     var hub = $.connection.gameHub;
     var connected = false;
 
+
     var local2 = @Html.Raw(Json.Encode(Model));
     var canvas = document.getElementById('myCanvas');
     var stage = new createjs.Stage("myCanvas");
-    var myCircle = new createjs.Shape();
+    var myBubble = new createjs.Graphics().beginFill("Beige").drawRoundRect(30, 30, 100, 50, 4);   
+    var cmd = myBubble.command;
+    var bubbleTimer = setTimeout(function() { clearBubble(cmd) }, 5000);
+    
+    var myCircle = new createjs.Shape(myBubble);
     myCircle.graphics.beginFill(local2.Color).drawCircle(0, 0, 20);
 
     var palm1 = new createjs.Bitmap("/Content/palm-tree-on-island-hi.png");
@@ -64,6 +69,12 @@
 
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", stage);
+
+    function clearBubble(bubble) {
+        bubble.h = 0;        bubble.w = 0;
+        bubble.radiusBL = 0; bubble.radiusBR = 0;
+        bubble.radiusTL = 0; bubble.radiusTR = 0;
+    }
 
     function getMousePos(canvas, pos) {
         var rect = canvas.getBoundingClientRect();
