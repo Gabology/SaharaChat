@@ -1,0 +1,28 @@
+﻿body {
+}
+.navbar{
+    font-size: 28px;
+    font-weight: 300;
+    position:relative;
+    min-height: 60px;
+    margin-bottom: 25px;
+}
+.navbar, a{
+    padding-top: 11px;
+}
+
+#errorBody{
+    text-align: center;
+}
+
+#errorBody, img{
+    border-radius: 30%;
+}
+
+#hrSign{
+    border-color: #bf5a16;
+}
+
+color-picker{
+    padding-top: 10px;
+}
