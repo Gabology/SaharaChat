@@ -39,13 +39,64 @@
     var canvas = document.getElementById('myCanvas');
     var stage = new createjs.Stage("myCanvas");
     var myCircle = new createjs.Shape();
-    myCircle.graphics.beginFill(local2.Color).drawCircle(0, 0, 20);
+    myCircle.graphics.beginFill(local2.Color).drawCircle(0, 0, 20);//.Text("Hello World", "20px Arial", "#ff7700");
+
+    var myText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
+    myText.x = 100;
+    myText.y = 100;
+    myText.text="hej\nhej";
+    stage.addChild(myText);
+    
 
     var local = { "circle": myCircle };
     stage.addChild(local.circle);
 
-    createjs.Ticker.setFPS(60);
+   
+    
+    // Create the sprite sheet
+    var spritesheet = new createjs.SpriteSheet({
+        images: ['/Content/tiger.png'],
+        frames: {width: 200, height: 100},
+        animations: {   
+            run: {
+                frames: [0, 1, 2, 3, 4, 5, 6, 7],
+                speed: 0.5
+            }
+        }
+    });
+
+    // Create the bitmap animation from the spritesheet
+    // and display the standing 
+    var tiger = new createjs.Sprite(spritesheet);
+    tiger.scaleX = -1;
+    tiger.x = -200;
+    tiger.y = -200;
+    tiger.gotoAndPlay('run');
+
+    // Display container on screen
+    stage.addChild(tiger);
+        
+    window.setInterval(animateTiger, 10000);
+
+    function animateTiger()
+    {
+        tiger.scaleX = tiger.scaleX * -1; //flip x
+        var toX = tiger.x + (1200 * tiger.scaleX);
+        createjs.Tween.get(tiger).to({x:toX, y:500*Math.random()}, 2000);
+
+    }
+
+    // Reset player 1 second after death sequence finishes playing
+    /*player.onAnimationEnd = function() {
+        setTimeout(function() {
+            player.gotoAndStop('die');
+        }, 1000);
+    }; */
+
+    
+    createjs.Ticker.setFPS(25);
     createjs.Ticker.addEventListener("tick", stage);
+
 
     function getMousePos(canvas, pos) {
         var rect = canvas.getBoundingClientRect();
@@ -95,6 +146,7 @@
 
         createjs.Tween.get(clients[username].circle, {override: true})
             .to({ x : avatar.x, y : avatar.y }, hypotenuse * 2.0, createjs.Ease.linear());
+
     }
 
     function drawIt(e) {
@@ -106,6 +158,9 @@
 
         createjs.Tween.get(local.circle, {override: true})
             .to({ x : position.x, y: position.y }, hypotenuse * 2.0, createjs.Ease.linear());
+
+        createjs.Tween.get(myText, {override: true})
+            .to({ x : position.x + 30, y: position.y - 30 }, hypotenuse * 2.0, createjs.Ease.linear());
 
         hub.server.sendPosition(local2.Color, position.x, position.y)
             .done(function() { console.log("(CLIENT) Successfully sent updated position to server!") })
