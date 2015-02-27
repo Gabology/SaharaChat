@@ -118,6 +118,7 @@
     <Content Include="Content\ourstylesheet.css" />
     <Content Include="Content\palm-tree-on-island-hi.png" />
     <Content Include="Content\StyleSheet.css" />
+    <Content Include="Content\tiger.png" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="SaharaChat.sql" />
