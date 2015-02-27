@@ -46,7 +46,7 @@ namespace SaharaChat.Hubs
         }
 
         public void SendMessage(string msg) {
-            Clients.All.printMessage(GetCallerUserName() + ": " + msg);
+            Clients.All.printMessage(GetCallerUserName(), msg);
         }
 
         public void GetLog()

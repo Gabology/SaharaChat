@@ -37,17 +37,12 @@
     var local2 = @Html.Raw(Json.Encode(Model));
     var canvas = document.getElementById('myCanvas');
     var stage = new createjs.Stage("myCanvas");
-    var myBubble = new createjs.Graphics().beginFill("Beige").drawRoundRect(30, 30, 100, 50, 4);
+    var myBubble = new createjs.Graphics().beginFill("Beige").drawRoundRect(30, 30, 0, 0, 0);   //Begin with "invisible" bubble
     var cmd = myBubble.command;
-    var bubbleTimer = setTimeout(function() { clearBubble(cmd) }, 5000);
+    var bubbleTimer; 
 
     var myCircle = new createjs.Shape(myBubble);
     myCircle.graphics.beginFill(local2.Color).drawCircle(0, 0, 20);
-    var myText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
-    myText.x = 100;
-    myText.y = 100;
-    myText.text="hej\nhej";
-    stage.addChild(myText);
 
     var local = { circle : myCircle,
                   bubble : myBubble };
@@ -71,6 +66,15 @@
     stage.addChild(skeleton);
     stage.addChild(local.circle);
 
+    // Text must be added after bubble for correct z order
+    var myText = new createjs.Text("", "20px Arial", "#ff7700");
+    myText.x = 40;
+    myText.y = 40;
+    myText.lineWidth = 200;
+    
+    stage.addChild(myText);
+
+
 
 
     // Create the sprite sheet
@@ -90,7 +94,7 @@
     var tiger = new createjs.Sprite(spritesheet);
     tiger.scaleX = -1;
     tiger.x = -200;
-    tiger.y = -200;
+    tiger.y = -100;
     tiger.gotoAndPlay('run');
 
     // Display container on screen
@@ -102,7 +106,7 @@
     {
         tiger.scaleX = tiger.scaleX * -1; //flip x
         var toX = tiger.x + (1200 * tiger.scaleX);
-        createjs.Tween.get(tiger).to({x:toX, y:500*Math.random()}, 2000);
+        createjs.Tween.get(tiger).to({x:toX, y:600*Math.random()-100}, 2000);
 
     }
 
@@ -117,10 +121,12 @@
     createjs.Ticker.setFPS(25);
     createjs.Ticker.addEventListener("tick", stage);
 
-    function clearBubble(bubble) {
+    function clearBubble(bubble, text) {
         bubble.h = 0;        bubble.w = 0;
         bubble.radiusBL = 0; bubble.radiusBR = 0;
         bubble.radiusTL = 0; bubble.radiusTR = 0;
+
+        text.text = "";
     }
 
     function getMousePos(canvas, pos) {
@@ -138,9 +144,28 @@
         }
     })
 
-    hub.client.printMessage = function(msg) {
-        console.log(msg);
-        $("#log").prepend(msg + "<br>");
+    hub.client.printMessage = function(username, msg) {
+        console.log(username + ": " + msg);
+        $("#log").prepend(username + ": " + msg + "<br>");
+
+        if (clients.hasOwnProperty(username)) {
+            //Update local bubble
+            clients[username].text.text = msg;
+
+            //Get text size and set bubble size
+            var bounds = clients[username].text.getBounds();
+            var bubbleX = bounds.width + 20;
+            var bubbleY = bounds.height + 20;
+            var bubble = clients[username].bubblecmd;
+            bubble.h = bubbleY;  bubble.w = bubbleX;
+            bubble.radiusBL = 4; bubble.radiusBR = 4;
+            bubble.radiusTL = 4; bubble.radiusTR = 4;
+
+            //Clear bubble and text after X secs
+            //Remember to clear bubbleTimer first, otherwise an old timer will fire (it seems)
+            clearTimeout(clients[username].bubbleTimer);
+            clients[username].bubbleTimer = setTimeout(function() { clearBubble(clients[username].bubblecmd, clients[username].text) }, 5000);
+        }
     }
 
     $("#sendMsgBtn").click(function() {
@@ -148,6 +173,23 @@
             .done(function() { console.log("Message sent") })
             .fail(function() { console.log("Failed to send message")});
         this.value = "";
+
+        //Update local bubble
+        myText.text = $("#inTb").val();
+
+        //Get text size and set bubble size
+        var bounds = myText.getBounds();
+        var bubbleX = bounds.width + 20;
+        var bubbleY = bounds.height + 20;
+        var bubble = cmd;
+        bubble.h = bubbleY;  bubble.w = bubbleX;
+        bubble.radiusBL = 4; bubble.radiusBR = 4;
+        bubble.radiusTL = 4; bubble.radiusTR = 4;
+
+        //Clear bubble and text after X secs
+        //Remember to clear bubbleTimer first, otherwise an old timer will fire (it seems)
+        clearTimeout(bubbleTimer);
+        bubbleTimer = setTimeout(function() { clearBubble(cmd, myText) }, 5000);
     })
 
     hub.client.printLog = function (json) {
@@ -159,9 +201,27 @@
 
     hub.client.updatePositionOf = function (username, avatar) {
         if (!clients.hasOwnProperty(username)) {
-            clients[username] = { "circle": new createjs.Shape() }
+            clients[username] = { 
+/*                "circle": new createjs.Shape(),
+                "text" :  new createjs.Text("", "20px Arial", "#ff7700"),
+                "bubble" : new createjs.Graphics().beginFill("Beige").drawRoundRect(30, 30, 0, 0, 0),   //Begin with "invisible" bubble */
+            }
+
+            clients[username].bubble = new createjs.Graphics().beginFill("Beige").drawRoundRect(30, 30, 0, 0, 0);   //Begin with "invisible" bubble
+            clients[username].bubblecmd = clients[username].bubble.command;     //Must get this handle BEFORE creating a circle on top of graphics handle
+            clients[username].circle = new createjs.Shape(clients[username].bubble);
             clients[username].circle.graphics.beginFill(avatar.color).drawCircle(0, 0, 20);
+            clients[username].bubbleTimer;  // Is this an empty var now?
             stage.addChild(clients[username].circle);
+
+            //text
+            clients[username].text = new createjs.Text("", "20px Arial", "#ff7700");
+            clients[username].text.x = 40;
+            clients[username].text.y = 40;
+            clients[username].text.lineWidth = 200;
+            clients[username].text.text = "";
+            stage.addChild(clients[username].text);
+
             stage.update()
         }
 
@@ -171,6 +231,10 @@
 
         createjs.Tween.get(clients[username].circle, {override: true})
             .to({ x : avatar.x, y : avatar.y }, hypotenuse * 2.0, createjs.Ease.linear());
+
+        createjs.Tween.get(clients[username].text, {override: true})
+            .to({ x : avatar.x + 40, y : avatar.y + 40}, hypotenuse * 2.0, createjs.Ease.linear());
+
 
     }
 
@@ -185,7 +249,7 @@
             .to({ x : position.x, y: position.y }, hypotenuse * 2.0, createjs.Ease.linear());
 
         createjs.Tween.get(myText, {override: true})
-            .to({ x : position.x + 30, y: position.y - 30 }, hypotenuse * 2.0, createjs.Ease.linear());
+            .to({ x : position.x + 40, y: position.y + 40 }, hypotenuse * 2.0, createjs.Ease.linear());
 
         hub.server.sendPosition(local2.Color, position.x, position.y)
             .done(function() { console.log("(CLIENT) Successfully sent updated position to server!") })
