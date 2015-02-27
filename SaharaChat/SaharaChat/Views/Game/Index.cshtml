@@ -33,31 +33,51 @@
 <script defer>
     var clients = {}
     var hub = $.connection.gameHub;
-    var connected = false;
 
     var local2 = @Html.Raw(Json.Encode(Model));
     var canvas = document.getElementById('myCanvas');
     var stage = new createjs.Stage("myCanvas");
-    var myCircle = new createjs.Shape();
-    myCircle.graphics.beginFill(local2.Color).drawCircle(0, 0, 20);//.Text("Hello World", "20px Arial", "#ff7700");
+    var myBubble = new createjs.Graphics().beginFill("Beige").drawRoundRect(30, 30, 100, 50, 4);
+    var cmd = myBubble.command;
+    var bubbleTimer = setTimeout(function() { clearBubble(cmd) }, 5000);
 
+    var myCircle = new createjs.Shape(myBubble);
+    myCircle.graphics.beginFill(local2.Color).drawCircle(0, 0, 20);
     var myText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
     myText.x = 100;
     myText.y = 100;
     myText.text="hej\nhej";
     stage.addChild(myText);
-    
 
-    var local = { "circle": myCircle };
+    var local = { circle : myCircle,
+                  bubble : myBubble };
+
+    var palm1 = new createjs.Bitmap("/Content/palm-tree-on-island-hi.png");
+    palm1.x = 100;
+    palm1.y = 100;
+    var palm2 = new createjs.Bitmap("/Content/palm-tree-on-island-hi.png");
+    palm2.x = 400;
+    palm2.y = 400;
+    var palm3 = new createjs.Bitmap("/Content/palm-tree-on-island-hi.png");
+    palm3.x = 650;
+    palm3.y = 250;
+    var skeleton = new createjs.Bitmap("/Content/animalskull.png");
+    skeleton.x = 250;
+    skeleton.y = 202;
+
+    stage.addChild(palm1);
+    stage.addChild(palm2);
+    stage.addChild(palm3);
+    stage.addChild(skeleton);
     stage.addChild(local.circle);
 
-   
-    
+
+
     // Create the sprite sheet
     var spritesheet = new createjs.SpriteSheet({
         images: ['/Content/tiger.png'],
         frames: {width: 200, height: 100},
-        animations: {   
+        animations: {
             run: {
                 frames: [0, 1, 2, 3, 4, 5, 6, 7],
                 speed: 0.5
@@ -66,7 +86,7 @@
     });
 
     // Create the bitmap animation from the spritesheet
-    // and display the standing 
+    // and display the standing
     var tiger = new createjs.Sprite(spritesheet);
     tiger.scaleX = -1;
     tiger.x = -200;
@@ -75,7 +95,7 @@
 
     // Display container on screen
     stage.addChild(tiger);
-        
+
     window.setInterval(animateTiger, 10000);
 
     function animateTiger()
@@ -93,10 +113,15 @@
         }, 1000);
     }; */
 
-    
+
     createjs.Ticker.setFPS(25);
     createjs.Ticker.addEventListener("tick", stage);
 
+    function clearBubble(bubble) {
+        bubble.h = 0;        bubble.w = 0;
+        bubble.radiusBL = 0; bubble.radiusBR = 0;
+        bubble.radiusTL = 0; bubble.radiusTR = 0;
+    }
 
     function getMousePos(canvas, pos) {
         var rect = canvas.getBoundingClientRect();
